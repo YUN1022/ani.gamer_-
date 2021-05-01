@@ -2,10 +2,7 @@ import requests
 import json
 
 def get_Danmu(sn):
-    '''
-    >>>get_Danmu(sn)
-    'received danmu'
-    '''
+    
     headers = {
         'authority':'ani.gamer.com.tw',
         'accept':'application/json, text/javascript, */*; q=0.01',
