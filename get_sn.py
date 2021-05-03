@@ -11,7 +11,7 @@ def crawler(url):
         response = requests.get(url, headers=headers)
         bsobj = BeautifulSoup(response.text, 'lxml')
         pattern = r'(.+)\[.*'
-        anime_name = re.search(pattern, bsobj.title.text).group(1)
+        # anime_name = re.search(pattern, bsobj.title.text).group(1)
 
         season_section = bsobj.find('section', {'class':'season'})
         anime_url = season_section.find_all('a')
@@ -20,14 +20,20 @@ def crawler(url):
         for i in anime_url:
             i.get('href')
             pattern = "[0-9]+"
-            sn = re.search(pattern, anime_url[0].get('href')).group(0)
+            sn = re.search(pattern, i.get('href')).group(0)
             sn_list.append(sn)
 
-        dict = {anime_name: sn_list}
-        return dict
+        return sn_list
 
     except:
-        return {url: 'faild'}
+        return 'faild'
 
 if __name__ == '__main__':
-    print(crawler('https://ani.gamer.com.tw/animeRef.php?sn=112522'))
+    df = pd.read_csv('gamer_video_list_ver_2.csv', index_col='SN_Number', encoding='utf-8-sig')
+    sn = []
+
+    for i in df.index:
+        sn_list = crawler('https://ani.gamer.com.tw/animeRef.php?sn='+str(i))
+        sn.append(sn_list)
+    df.insert(0, column = '各集SN', value = sn)
+    df.to_csv('gamer_video_list_ver_2.csv', index=False, encoding='utf-8-sig')
