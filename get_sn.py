@@ -35,5 +35,5 @@ if __name__ == '__main__':
     for i in df.index:
         sn_list = crawler('https://ani.gamer.com.tw/animeRef.php?sn='+str(i))
         sn.append(sn_list)
-    df.insert(0, column = '各集SN', value = sn)
+    df.insert(7, column = '各集SN', value = sn)
     df.to_csv('gamer_video_list_ver_2.csv', index=False, encoding='utf-8-sig')
