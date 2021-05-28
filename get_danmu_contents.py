@@ -35,8 +35,10 @@ def get_contents(path, r, SN):
 if __name__ == '__main__':
     strat = time.time()
     df = pd.read_csv('gamer_video_list_Complete.csv')
-    for SN in df['網址SN'][:10]:
-        time.sleep(random.uniform(1, 2))
+    count = 1
+    faild_list = []
+
+    for SN in df['網址SN']:
         danmu_path = r'./danmu/' + str(SN)
         if not os.path.isdir(danmu_path):
             os.mkdir(danmu_path)
@@ -47,9 +49,13 @@ if __name__ == '__main__':
             pattern = r'([\d]+)'
             r = re.findall(pattern, sn[0])
             get_contents(danmu_path, r, SN)
+            print("Now: {} %".format(count//len(df)*100), end = '\r')
         except:
-            print(SN)
+            faild_list.append(SN)
+        
+        time.sleep(random.uniform(1,2))
 
     end = time.time()
 
-    print("執行時間: " + str(end - strat) + " seconds")
+    print("執行時間: {} seconds".format(end - strat))
+    print("共{}部動畫失敗, 代碼:{}".format(len(faild_list), faild_list))
