@@ -50,7 +50,7 @@ def get_Highlight(data ,T):
     
     return i,j
 
-def two_std_Highlight_section(sn):
+def get_Highlight_section(sn):
 
     all_episode = read_all_episode(sn)
 
@@ -72,9 +72,29 @@ def two_std_Highlight_section(sn):
     
     return all_highlight_section
 
+
+def get_Highlight_danmu(all_highlight_section, sn):
+    for episode in range(episode_count):
+        danmu_dict = {}
+        for i in all_highlight_section['第{}集'.format(episode+1)]:
+            df = pd.read_csv(path + '{}_{}.csv'.format(sn, episode+1))
+            df['time'] = df['time']/100
+            f = (df['time'] >= i[0]) & (df['time'] < i[1] )
+            danmu = df[f]['text'].values.tolist()
+            danmu_dict['section{}'.format(i)] = danmu
+        
+        df2 = pd.DataFrame(dict([(k,pd.Series(v)) for k,v in danmu_dict.items()]))
+        df2.to_csv('./extract_danmu/{}/episode{}.csv'.format(sn, episode+1), encoding='utf-8-sig', index=False)
+
 if __name__ == '__main__':
 
-    sn = 112522
-    all_highlight_section = two_std_Highlight_section(sn)
+    sn = 109573
+    save_path = './extract_danmu/{}/'.format(sn)
+    if not os.path.isdir(save_path):
+        os.mkdir(save_path)
+
+    all_highlight_section = get_Highlight_section(sn)
+    get_Highlight_danmu(all_highlight_section, sn)
+
     df = pd.DataFrame(dict([(k,pd.Series(v)) for k,v in all_highlight_section.items()]))
-    df.to_csv('{}.csv'.format(sn), encoding='utf-8-sig', index=False)
+    df.to_csv(save_path + '/{}_sections.csv'.format(sn), encoding='utf-8-sig', index=False)
