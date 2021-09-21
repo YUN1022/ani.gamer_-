@@ -88,7 +88,7 @@ def get_Highlight_danmu(all_highlight_section, sn):
 
 if __name__ == '__main__':
 
-    sn = 109573
+    sn = 76677
     save_path = './extract_danmu/{}/'.format(sn)
     if not os.path.isdir(save_path):
         os.mkdir(save_path)

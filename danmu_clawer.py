@@ -16,3 +16,5 @@ def get_Danmu(sn):
 
     response = requests.post(url, data=FormData, headers=headers)
     return response.json()
+
+print(get_Danmu(24844))
